@@ -14,7 +14,7 @@ class Wine
   end
 
   def start(win_path)
-    puts "WINEPREFIX=#{@prefix} WINEARCH=#{@architecture} wine start '#{win_path}'"
-    exec("WINEPREFIX=#{@prefix} WINEARCH=#{@architecture} wine start '#{win_path}'")
+    puts "WINEPREFIX=#{@prefix} WINEARCH=#{@architecture} wine '#{win_path}'"
+    exec("WINEPREFIX=#{@prefix} WINEARCH=#{@architecture} wine '#{win_path}'")
   end
 end

@@ -1,9 +1,11 @@
 require 'thor'
 require 'net/http'
+require 'fileutils'
 require_relative 'cellar'
 
 class CLI < Thor
-  desc 'install FILE', 'installs wine program'
+  desc 'install FILE', 'Installs wine program'
+  option :source, type: :string, desc: 'Local source'
   def install(file)
     cellar = Cellar.new
 
@@ -13,14 +15,19 @@ class CLI < Thor
     wine_tricks = bottle.wine_tricks
     wine_tricks.install(bottle.dependencies)
 
+    source_path = File.expand_path(options[:source]) if options[:source]
     wine = bottle.wine
     bottle.inside do
-      download(bottle.source)
+      if options[:source]
+        FileUtils.cp(source_path, 'binary.exe')
+      else
+        download(bottle.source)
+      end
       wine.execute('binary.exe')
     end
   end
 
-  desc 'start ID', 'starts default bottle executable'
+  desc 'start ID', 'Starts default bottle executable'
   def start(id)
     bottle = Cellar.new.get_bottle(id)
     return unless bottle
@@ -28,7 +35,7 @@ class CLI < Thor
     bottle.start
   end
 
-  desc 'list', 'lists installed bottles'
+  desc 'list', 'Lists installed bottles'
   def list
     Cellar.new.bottles.each do |bottle|
       puts "---------------BOTTLE(#{bottle.id})------"
@@ -41,12 +48,12 @@ class CLI < Thor
     end
   end
 
-  desc 'remote ID', 'removes bottle with given id'
+  desc 'remote ID', 'Removes bottle with given id'
   def remove(id)
     Cellar.new.remove(id)
   end
 
-  desc 'clean', 'deletes all bottles'
+  desc 'clean', 'Deletes all bottles'
   def clean
     Cellar.new.clean
   end
