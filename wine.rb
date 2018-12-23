@@ -7,6 +7,7 @@ class Wine
   end
 
   def execute(file)
+    puts "executing: `WINEPREFIX=#{@prefix} wine #{file}`"
     `WINEPREFIX=#{@prefix} wine #{file}`
     raise '\'wine.execute\' failed' unless $?.success?
   end

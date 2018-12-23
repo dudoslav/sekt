@@ -7,6 +7,8 @@ class WineTricks
   end
 
   def install(dependencies)
+    puts "executing: `WINEPREFIX=#{@prefix} winetricks install #{dependencies.join(' ')}`"
     `WINEPREFIX=#{@prefix} winetricks install #{dependencies.join(' ')}`
+    # raise '\'wine_tricks.install\' failed' unless $?.success?
   end
 end
