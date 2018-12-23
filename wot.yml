@@ -1,9 +1,0 @@
-name: World of Tanks
-description: World of Tanks DX09 EU servers
-source: https://wds.gcdn.co/wgc/releases_tTrHgLCKHBRiaL/wgc_18.08.00.2699_eu/world_of_tanks_install_eu.exe?enctid=bqopow6cl6np&enctid=bqopow6cl6np
-architecture: win32
-executable: C:\ProgramData\Wargaming.net\GameCenter\wgc.exe
-dependencies:
-  - d3dx9
-  - d3dcompiler_43
-  - vcrun2015
