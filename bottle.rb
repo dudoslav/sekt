@@ -35,6 +35,6 @@ class Bottle
   end
 
   def inside(&block)
-    Dir.chdir(&block)
+    Dir.chdir(path, &block)
   end
 end
