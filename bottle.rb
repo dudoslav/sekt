@@ -12,7 +12,7 @@ class Bottle
     @name = name
     @description = description
     @source = source
-    @dependencies = dependencies
+    @dependencies = dependencies || []
 
     @path = File.join(Cellar::CELLAR_PATH, @id)
     @wine_prefix = File.join(@path, WINE_PREFIX_NAME)
