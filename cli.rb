@@ -20,6 +20,14 @@ class CLI < Thor
     end
   end
 
+  desc 'start ID', 'starts default bottle executable'
+  def start(id)
+    bottle = Cellar.new.get_bottle(id)
+    return unless bottle
+
+    bottle.start
+  end
+
   desc 'list', 'lists installed bottles'
   def list
     Cellar.new.bottles.each do |bottle|
@@ -27,6 +35,8 @@ class CLI < Thor
       puts "name = #{bottle.name}"
       puts "description = #{bottle.description}"
       puts "wine_prefix = #{bottle.wine_prefix}"
+      puts "architecture = #{bottle.architecture}"
+      puts "executable = #{bottle.executable}"
       puts '-------------------------------------'
     end
   end
@@ -48,6 +58,8 @@ class CLI < Thor
 private
 
   def download(source)
+    puts "downloading: #{source}"
+
     uri = URI.parse(source)
     Net::HTTP.start(uri.host) do |http|
         resp = http.get(uri.path)

@@ -1,0 +1,5 @@
+name: Quake 3 Arena
+description: Quake 3 Arena
+source: https://ia800301.us.archive.org/6/items/QuakeIiiArenaDemo/Q3ADemo.exe
+architecture: win32
+executable: C:\Q3Ademo\quake3.exe

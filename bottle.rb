@@ -5,14 +5,16 @@ require_relative 'wine_tricks'
 class Bottle
   WINE_PREFIX_NAME = 'windows'.freeze
 
-  attr_reader :id, :name, :description, :source, :dependencies, :path, :wine_prefix
+  attr_reader :id, :name, :description, :source, :architecture, :dependencies, :path, :wine_prefix, :executable
 
-  def initialize(id, name, description, source, dependencies)
+  def initialize(id, name, description, source, architecture, dependencies, executable)
     @id = id
     @name = name
+    @architecture = architecture || 'win32'
     @description = description
     @source = source
     @dependencies = dependencies || []
+    @executable = executable
 
     @path = File.join(Cellar::CELLAR_PATH, @id)
     @wine_prefix = File.join(@path, WINE_PREFIX_NAME)
@@ -23,18 +25,24 @@ class Bottle
                hash['name'],
                hash['description'],
                hash['source'],
-               hash['dependencies'])
+               hash['architecture'],
+               hash['dependencies'],
+               hash['executable'])
   end
 
   def wine
-    Wine.new(wine_prefix)
+    Wine.new(wine_prefix, architecture)
   end
 
   def wine_tricks
-    WineTricks.new(wine_prefix)
+    WineTricks.new(wine_prefix, architecture)
   end
 
   def inside(&block)
     Dir.chdir(path, &block)
+  end
+
+  def start
+    wine.start(executable)
   end
 end
