@@ -9,14 +9,14 @@ module Sekt
     end
 
     def execute(file)
-      puts "executing: `WINEPREFIX=#{@prefix} WINEARCH=#{@architecture} wine #{file}`"
-      `WINEPREFIX=#{@prefix} WINEARCH=#{@architecture} wine #{file}`
+      puts "executing: `WINEPREFIX=#{@prefix} WINEDLLOVERRIDES=winemenubuilder.exe=d WINEARCH=#{@architecture} wine #{file}`"
+      `WINEPREFIX=#{@prefix} WINEDLLOVERRIDES=winemenubuilder.exe=d WINEARCH=#{@architecture} wine #{file}`
       raise '\'wine.execute\' failed' unless $?.success?
     end
 
     def start(win_path)
-      puts "WINEPREFIX=#{@prefix} WINEARCH=#{@architecture} wine '#{win_path}'"
-      exec("WINEPREFIX=#{@prefix} WINEARCH=#{@architecture} wine '#{win_path}'")
+      puts "WINEPREFIX=#{@prefix} WINEARCH=#{@architecture} wine #{win_path}"
+      exec("WINEPREFIX=#{@prefix} WINEARCH=#{@architecture} wine #{win_path}")
     end
   end
 end

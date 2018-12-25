@@ -49,12 +49,12 @@ module Sekt
     end
 
     def to_h
-      { name: name,
-        description: description,
-        source: source,
-        architecture: architecture,
-        dependencies: dependencies,
-        executable: executable }
+      { 'name' => name,
+        'description' => description,
+        'source' => source,
+        'architecture' => architecture,
+        'dependencies' => dependencies,
+        'executable' => executable }
     end
   end
 end

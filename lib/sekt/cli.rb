@@ -48,6 +48,25 @@ module Sekt
       end
     end
 
+    desc 'print ID', 'Prints detailed bottle information'
+    def print(id)
+      cellar = Cellar.new
+      bottle = cellar.get_bottle(id)
+      return unless bottle
+
+      puts "---------------(#{bottle.id})---------------"
+      puts "name = #{bottle.name}"
+      puts "description = #{bottle.description}"
+      puts "source = #{bottle.source}"
+      puts "wine_prefix = #{bottle.wine_prefix}"
+      puts "path = #{bottle.path}"
+      puts "architecture = #{bottle.architecture}"
+      puts "executable = #{bottle.executable}"
+      puts "dependencies:"
+      bottle.dependencies.each { |d| puts "\t- #{d}" }
+      puts '-------------------------------------'
+    end
+
     desc 'update ID *DEPS', 'Updates existing bottle with given dependencies'
     def update(id, *deps)
       cellar = Cellar.new
@@ -78,10 +97,6 @@ module Sekt
     def clean
       Cellar.new.clean
     end
-
-    map pop: :install
-    map cellar: :list
-    map bottles: :list
 
   private
 
