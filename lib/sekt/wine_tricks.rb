@@ -10,9 +10,9 @@ module Sekt
 
     def install(dependencies)
       return if dependencies.empty?
-      puts "executing: `WINEPREFIX=#{@prefix} WINEARCH=#{@architecture} winetricks install #{dependencies.join(' ')}`"
-      `WINEPREFIX=#{@prefix} WINEARCH=#{@architecture} winetricks install #{dependencies.join(' ')}`
-      # raise '\'wine_tricks.install\' failed' unless $?.success?
+      puts "executing: `WINEPREFIX=#{@prefix} WINEARCH=#{@architecture} winetricks #{dependencies.join(' ')}`"
+      `WINEPREFIX=#{@prefix} WINEARCH=#{@architecture} winetricks #{dependencies.join(' ')}`
+      raise '\'wine_tricks.install\' failed' unless $?.success?
     end
   end
 end

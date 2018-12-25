@@ -26,6 +26,10 @@ module Sekt
       bottle
     end
 
+    def update_bottle(bottle)
+      File.write(File.join(bottle.path, 'bottle.yml'), bottle.to_h.to_yaml)
+    end
+
     def remove(id)
       bottle = get_bottle(id)
       remove_bottle(bottle)

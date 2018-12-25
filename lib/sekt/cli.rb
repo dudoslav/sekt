@@ -1,7 +1,9 @@
 require 'thor'
-require 'net/http'
 require 'fileutils'
+require 'pathname'
+require 'uri'
 require 'sekt/cellar'
+require 'sekt/download'
 
 module Sekt
   class CLI < Thor
@@ -16,16 +18,13 @@ module Sekt
       wine_tricks = bottle.wine_tricks
       wine_tricks.install(bottle.dependencies)
 
-      source_path = File.expand_path(options[:source]) if options[:source]
+      bottle.source = File.expand_path(options[:source]) if options[:source]
       wine = bottle.wine
       bottle.inside do
-        if options[:source]
-          FileUtils.cp(source_path, 'binary.exe')
-        else
-          download(bottle.source)
-        end
-        wine.execute('binary.exe')
+        wine.execute(get_source(bottle))
       end
+
+      cellar.update_bottle(bottle)
     end
 
     desc 'start ID', 'Starts default bottle executable'
@@ -49,6 +48,27 @@ module Sekt
       end
     end
 
+    desc 'update ID *DEPS', 'Updates existing bottle with given dependencies'
+    def update(id, *deps)
+      cellar = Cellar.new
+      bottle = cellar.get_bottle(id)
+      return unless bottle
+
+      bottle.wine_tricks.install(deps)
+      bottle.dependencies << deps
+
+      cellar.update_bottle(bottle)
+    end
+
+    desc 'export ID [FILE]', 'Exports bottle.yml into given file'
+    def export(id, file='bottle.yml')
+      cellar = Cellar.new
+      bottle = cellar.get_bottle(id)
+      return unless bottle
+
+      File.write(file, bottle.to_h.to_yaml)
+    end
+
     desc 'remote ID', 'Removes bottle with given id'
     def remove(id)
       Cellar.new.remove(id)
@@ -65,16 +85,18 @@ module Sekt
 
   private
 
-    def download(source)
-      puts "downloading: #{source}"
-
-      uri = URI.parse(source)
-      Net::HTTP.start(uri.host) do |http|
-          resp = http.get(uri.path)
-          open("binary.exe", "wb") do |file|
-              file.write(resp.body)
-          end
+    def get_source(bottle)
+      if bottle.source =~ URI::regexp
+        return Download.new(bottle.source).start
       end
+
+      source_path = Pathname.new(bottle.source)
+      if source_path
+        FileUtils.cp(source_path, '.')
+        return source_path.basename
+      end
+
+      raise 'Failed to retrieve bottle.source'
     end
   end
 end

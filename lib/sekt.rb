@@ -4,6 +4,7 @@ module Sekt
   autoload :Bottle, 'sekt/bottle'
   autoload :Wine, 'sekt/wine'
   autoload :WineTricks, 'sekt/wine_tricks'
+  autoload :Download, 'sekt/download'
 end
 
 require 'sekt/version'

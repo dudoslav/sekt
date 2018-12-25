@@ -6,7 +6,8 @@ module Sekt
   class Bottle
     WINE_PREFIX_NAME = 'windows'.freeze
 
-    attr_reader :id, :name, :description, :source, :architecture, :dependencies, :path, :wine_prefix, :executable
+    attr_reader :id, :name, :description, :architecture, :path, :wine_prefix, :executable
+    attr_accessor :source, :dependencies
 
     def initialize(id, name, description, source, architecture, dependencies, executable)
       @id = id
@@ -45,6 +46,15 @@ module Sekt
 
     def start
       wine.start(executable)
+    end
+
+    def to_h
+      { name: name,
+        description: description,
+        source: source,
+        architecture: architecture,
+        dependencies: dependencies,
+        executable: executable }
     end
   end
 end
