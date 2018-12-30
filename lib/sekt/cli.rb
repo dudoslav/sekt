@@ -4,6 +4,7 @@ require 'pathname'
 require 'uri'
 require 'sekt/cellar'
 require 'sekt/download'
+require 'sekt/bottler'
 
 module Sekt
   class CLI < Thor
@@ -16,6 +17,7 @@ module Sekt
       bottle = cellar.create_bottle(bottle_yaml)
 
       wine_tricks = bottle.wine_tricks
+      wine_tricks.sandbox
       wine_tricks.install(bottle.dependencies)
 
       bottle.source = File.expand_path(options[:source]) if options[:source]
@@ -79,13 +81,18 @@ module Sekt
       cellar.update_bottle(bottle)
     end
 
-    desc 'export ID [FILE]', 'Exports bottle.yml into given file'
-    def export(id, file='bottle.yml')
+    desc 'export ID', 'Exports bottle'
+    def export(id)
       cellar = Cellar.new
       bottle = cellar.get_bottle(id)
       return unless bottle
 
-      File.write(file, bottle.to_h.to_yaml)
+      bottler = Bottler.new(bottle)
+      bottler.write
+    end
+
+    desc 'import FILE', 'Imports bottle'
+    def import(file)
     end
 
     desc 'remote ID', 'Removes bottle with given id'

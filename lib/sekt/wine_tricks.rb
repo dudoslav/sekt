@@ -14,5 +14,11 @@ module Sekt
       `WINEPREFIX=#{@prefix} WINEARCH=#{@architecture} winetricks #{dependencies.join(' ')}`
       raise '\'wine_tricks.install\' failed' unless $?.success?
     end
+
+    def sandbox
+      puts 'creating sandbox'
+      `WINEPREFIX=#{@prefix} WINEARCH=#{@architecture} winetricks sandbox`
+      raise '\'wine_tricks.sandbox\' failed' unless $?.success?
+    end
   end
 end
