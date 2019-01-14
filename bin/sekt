@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
 require 'sekt'
 
-Sekt::CLI.start(ARGV)
+Sekt::CLI::CLI.start(ARGV)
+

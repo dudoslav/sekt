@@ -1,0 +1,13 @@
+name: World of Tanks
+description: World of Tanks DX11 EU servers
+source: https://redirect.wargaming.net/WoT/launcher_install_eu
+architecture: win64
+executable: C:\Games\World_of_Tanks\WoTLauncher.exe
+dependencies:
+  - corefonts
+  - mfc40
+  - mfc42
+  - msxml3
+  - msxml4
+  - msxml6
+  - dxvk

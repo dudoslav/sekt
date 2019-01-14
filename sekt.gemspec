@@ -30,6 +30,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler', '~> 1.16'
 
   spec.add_runtime_dependency 'thor', '~> 0.20'
-  spec.add_runtime_dependency 'rubyzip', '~> 1.2'
+  spec.add_runtime_dependency 'yell', '~> 2.0'
+  spec.add_runtime_dependency 'settingslogic', '~> 2.0'
+  # spec.add_runtime_dependency 'rubyzip', '~> 1.2'
 end
 

@@ -5,7 +5,7 @@ require 'sekt/bottle'
 
 module Sekt
   class Cellar
-    CELLAR_PATH = File.join(ENV['HOME'], '.cellar').freeze
+    CELLAR_PATH = File.expand_path(Sekt::Settings.cellar_location).freeze
 
     attr_reader :bottles
 

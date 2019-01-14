@@ -6,6 +6,7 @@ module Sekt
   autoload :Wine, 'sekt/wine'
   autoload :WineTricks, 'sekt/wine_tricks'
   autoload :Download, 'sekt/download'
+  autoload :Settings, 'sekt/settings'
 end
 
 require 'sekt/version'
