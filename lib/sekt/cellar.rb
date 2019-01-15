@@ -9,15 +9,18 @@ module Sekt
 
     attr_reader :bottles
 
+    def self.inside(&block)
+      Dir.chdir(CELLAR_PATH, &block)
+    end
+
     def initialize
       Dir.mkdir(CELLAR_PATH) unless Dir.exists?(CELLAR_PATH)
       bottle_dirs = Dir.glob(File.join(CELLAR_PATH, '*')).select { |f| File.directory? f }
       @bottles = bottle_dirs.map { |bd| Bottle.load(File.basename(bd), YAML.load_file(File.join(bd, 'bottle.yml'))) }
-      puts 'Cellar loaded'
+      logger.debug('Cellar loaded')
     end
 
-    def create_bottle(hash)
-      id = SecureRandom.urlsafe_base64(6)
+    def create_bottle(hash, id=SecureRandom.urlsafe_base64(6))
       bottle_path = File.join(CELLAR_PATH, id)
       Dir.mkdir(bottle_path)
       File.write(File.join(bottle_path, 'bottle.yml'), hash.to_yaml)

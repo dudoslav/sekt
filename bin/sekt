@@ -1,5 +1,10 @@
 #!/usr/bin/env ruby
 require 'sekt'
 
-Sekt::CLI::CLI.start(ARGV)
+begin
+  Sekt::CLI::CLI.start(ARGV)
+rescue
+  $stderr.puts "\t|Error| #{$!.message}"
+end
+
 

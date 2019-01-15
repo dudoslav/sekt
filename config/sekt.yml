@@ -1,1 +1,2 @@
-cellar_location: ~/.cellar
+cellar_location: ~/.cellar # Location where wine prefixes will be stored
+logging_level: debug # debug, info, warn, error ...

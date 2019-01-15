@@ -5,31 +5,30 @@ require 'sekt/wine_tricks'
 module Sekt
   class Bottle
     WINE_PREFIX_NAME = 'windows'.freeze
+    REQUIRED_ATTRIBUTES = %w{id name source}.freeze
+    OPTIONAL_ATTRIBUTES = %w{architecture description dependencies executable}.freeze
+    ATTRIBUTES = REQUIRED_ATTRIBUTES + OPTIONAL_ATTRIBUTES
 
-    attr_reader :id, :name, :description, :architecture, :path, :wine_prefix, :executable
-    attr_accessor :source, :dependencies
+    attr_reader(*ATTRIBUTES)
+    attr_reader :path, :wine_prefix
 
-    def initialize(id, name, description, source, architecture, dependencies, executable)
-      @id = id
-      @name = name
-      @architecture = architecture || 'win32'
-      @description = description
-      @source = source
-      @dependencies = dependencies || []
-      @executable = executable
+    def check_args!(hash)
+      diff = REQUIRED_ATTRIBUTES - hash.keys
+      raise "Some required bottle attributes are missing: #{diff}" unless diff.empty?
+    end
+
+    def initialize(hash)
+      check_args!(hash)
+
+      ATTRIBUTES.each { |attr| instance_variable_set("@#{attr}", hash[attr]) }
 
       @path = File.join(Cellar::CELLAR_PATH, @id)
       @wine_prefix = File.join(@path, WINE_PREFIX_NAME)
     end
 
     def self.load(id, hash)
-      Bottle.new(id,
-                 hash['name'],
-                 hash['description'],
-                 hash['source'],
-                 hash['architecture'],
-                 hash['dependencies'],
-                 hash['executable'])
+      hash['id'] = id
+      Bottle.new(hash)
     end
 
     def wine
@@ -44,17 +43,38 @@ module Sekt
       Dir.chdir(path, &block)
     end
 
+    def inside_wine(&block)
+      Dir.chdir(File.join(wine_prefix, 'drive_c'), &block)
+    end
+
     def start
-      wine.start(executable)
+      wine.execute(executable)
+    end
+
+    def install_libs(libs)
+      wine_tricks.install(libs)
+      @dependencies + libs
     end
 
     def to_h
-      { 'name' => name,
-        'description' => description,
-        'source' => source,
-        'architecture' => architecture,
-        'dependencies' => dependencies,
-        'executable' => executable }
+      ATTRIBUTES.each_with_object({}) { |attr, hash| hash[attr] = instance_variable_get("@#{attr}") }
+    end
+
+    def pp
+      %(
+        Bottle___________________________________________________
+        |NAME: #{name}
+        |ID: #{id}
+        |PATH: #{path}
+        |WINE_PREFIX: #{wine_prefix}
+        |________________________________________________________
+
+          Description:
+            #{description}
+          Source: #{source}
+          Executable: #{executable}
+          Architecture: #{architecture}
+      )
     end
   end
 end

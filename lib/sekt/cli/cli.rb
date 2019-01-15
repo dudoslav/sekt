@@ -23,7 +23,7 @@ module Sekt
     private
 
       def init_logger
-        Yell.new :stdout, name: Object
+        Yell.new :stdout, name: Object, level: Settings.logging_level
         Object.send :include, Yell::Loggable
       end
     end
